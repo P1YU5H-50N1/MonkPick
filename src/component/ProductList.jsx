@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import {
-	DragDropContext,
-	Droppable,
-	Draggable,
-	resetServerContext,
-} from "react-beautiful-dnd";
-import DragHandleIcon from "./DragHandleIcon";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import ProductInput from "./ProductInput";
+import ProductPicker from "./ProductPicker";
 
 const ProductList = () => {
 	const [Products, setProducts] = useState([
@@ -56,8 +52,21 @@ const ProductList = () => {
 			},
 		},
 	]);
+	const [openPicker, setOpenPicker] = useState(false);
+	// const onBeforeCapture = () => {
+	// 	/*...*/
+	// };
 
-	
+	// const onBeforeDragStart = () => {
+	// 	/*...*/
+	// };
+
+	// const onDragStart = () => {
+	// 	/*...*/
+	// };
+	// const onDragUpdate = () => {
+	// 	/*...*/
+	// };
 	const onDragEnd = (result) => {
 		const items = Array.from(Products);
 		items.splice(
@@ -70,6 +79,7 @@ const ProductList = () => {
 
 	return (
 		<div>
+			<ProductPicker isOpen={openPicker} setIsOpen={setOpenPicker} />
 			<div className="text-base font-medium">Add Products</div>
 			<div>
 				<div className="flex gap-5 mt-4">
@@ -90,34 +100,12 @@ const ProductList = () => {
 								{...provided.droppableProps}
 							>
 								{Products.map(({ title, id }, idx) => (
-									<Draggable
-										key={id.toString()}
-										index={idx}
-										draggableId={id.toString()}
-									>
-										{(provided, snapshot) => (
-											<div
-												className="flex gap-5 mt-4 items-center"
-												ref={provided.innerRef}
-												// {...provided.dragHandleProps}
-												{...provided.draggableProps}
-											>
-												<DragHandleIcon
-													{...provided.dragHandleProps}
-												/>
-												<p>{idx + 1}.</p>
-												<input
-													onChange={(e) => {}}
-													placeholder="Select Product"
-													className="p-2"
-													value={title}
-												/>
-												<button className="bg-button text-white py-2 px-4 rounded-md">
-													Add Discount
-												</button>
-											</div>
-										)}
-									</Draggable>
+									<ProductInput
+										title={title}
+										id={id}
+										openPicker={()=>setOpenPicker(true)}
+										idx={idx}
+									/>
 								))}
 								{provided.placeholder}
 							</div>
