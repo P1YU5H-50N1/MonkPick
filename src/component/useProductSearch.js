@@ -22,12 +22,12 @@ const useProductSearch = (query, pageNum) => {
 			cancelToken: new axios.CancelToken((c) => (cancel = c)),
 		})
 			.then((res) => {
-				setQueryProducts((prevProducts) => [
-					...prevProducts,
-					...res.data,
-				]);
+				setQueryProducts((prevProducts) =>
+					res.data ? [...prevProducts, ...res.data] : prevProducts
+				);
 				setHasMore(res.data && res.data.length > 0);
 				setLoading(false);
+				console.log(res.data ? res.data[0] : null);
 			})
 			.catch((err) => {
 				if (axios.isCancel(err)) return;
