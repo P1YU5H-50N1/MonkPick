@@ -5,7 +5,7 @@ import EditIcon from "./EditIcon";
 
 const ProductInput = ({ title, id, idx, openPicker }) => {
 	return (
-		<Draggable key={id.toString()} index={idx} draggableId={id.toString()}>
+		<Draggable  index={idx} draggableId={id.toString()}>
 			{(provided, snapshot) => (
 				<div
 					className="flex gap-5 mt-4 items-center"
