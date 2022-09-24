@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import ProductInput from "./ProductInput";
-import ProductPicker from "./ProductPicker";
+import ProductPickerWrapper from "./ProductPickerWrapper";
 
 const ProductList = () => {
 	const [Products, setProducts] = useState([
@@ -79,7 +79,10 @@ const ProductList = () => {
 
 	return (
 		<div>
-			<ProductPicker isOpen={openPicker} setIsOpen={setOpenPicker} />
+			<ProductPickerWrapper
+				isOpen={openPicker}
+				setIsOpen={setOpenPicker}
+			/>
 			<div className="text-base font-medium">Add Products</div>
 			<div>
 				<div className="flex gap-5 mt-4">
@@ -101,9 +104,10 @@ const ProductList = () => {
 							>
 								{Products.map(({ title, id }, idx) => (
 									<ProductInput
+										key={id.toString()}
 										title={title}
 										id={id}
-										openPicker={()=>setOpenPicker(true)}
+										openPicker={() => setOpenPicker(true)}
 										idx={idx}
 									/>
 								))}
