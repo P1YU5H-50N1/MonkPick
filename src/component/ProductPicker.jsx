@@ -15,7 +15,6 @@ const ProductPicker = () => {
 		query,
 		pageNum
 	);
-	console.log("Loading", loading);
 
 	const observer = useRef();
 	const observeContainer = useRef();
@@ -26,9 +25,7 @@ const ProductPicker = () => {
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver(
 				(entries) => {
-					console.log("API Observer", pageNum, hasMore);
-					if (entries[0].isIntersecting) {
-						// console.log("API Increment page num")
+					if (entries[0].isIntersecting && hasMore) {
 						setPageNum((prevPageNum) => prevPageNum + 1);
 					}
 				},
@@ -37,7 +34,6 @@ const ProductPicker = () => {
 				}
 			);
 			if (node) observer.current.observe(node);
-			console.log(node);
 		},
 		[loading, hasMore]
 	);
@@ -71,21 +67,30 @@ const ProductPicker = () => {
 				</div>
 			</div>
 			<div ref={observeContainer} className="h-[60vh] overflow-y-auto">
-				<div className="mt-2 text px-6 border-t">Product Item</div>
-				{queryProducts.map(({ title, id }, idx) => {
-					return queryProducts.length - 1 === idx ? (
-						<ProductItem
-							lastProductRef={lastProductRef}
-							key={`${id.toString()} ${idx}`}
-							title={title}
-						/>
-					) : (
-						<ProductItem
-							key={`${id.toString()} ${idx}`}
-							title={title}
-						/>
-					);
-				})}
+				{queryProducts.map(
+					({ title, id, image, variants, status, handle }, idx) => {
+						return queryProducts.length - 1 === idx ? (
+							<ProductItem
+								lastProductRef={lastProductRef}
+								key={`${id.toString()} ${idx}`}
+								title={title}
+								image={image.src}
+								variants={variants}
+								status={status}
+								handle={handle}
+							/>
+						) : (
+							<ProductItem
+								key={`${id.toString()} ${idx}`}
+								title={title}
+								image={image.src}
+								variants={variants}
+								status={status}
+								handle={handle}
+							/>
+						);
+					}
+				)}
 				{loading ? (
 					<div className="mt-2 text px-6 border-t">Loading...</div>
 				) : null}
