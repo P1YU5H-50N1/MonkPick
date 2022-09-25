@@ -2,7 +2,7 @@ import React from 'react'
 import { HiPencil } from "react-icons/hi";
 import { IconContext } from "react-icons";
 
-const EditIcon = ({openPicker}) => {
+const EditIcon = ({handleEditItem}) => {
     return (
         <IconContext.Provider
         value={{
@@ -10,7 +10,7 @@ const EditIcon = ({openPicker}) => {
             size: "2.5em",
         }}
     >
-        <HiPencil onClick={openPicker} />
+        <HiPencil onClick={handleEditItem} />
     </IconContext.Provider>
     )
 }
