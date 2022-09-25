@@ -3,9 +3,10 @@ import { Draggable } from "react-beautiful-dnd";
 import DragHandleIcon from "./DragHandleIcon";
 import { ProductContext } from "./ProductProvider";
 import EditIcon from "./EditIcon";
+import RemoveIcon from "./RemoveIcon"
 
 const ProductInput = ({ title, id, idx, openPicker }) => {
-	const { setEditIndex } = useContext(ProductContext);
+	const { setEditIndex, ProductsLength } = useContext(ProductContext);
 	const handleEditItem = () => {
 		openPicker();
 		setEditIndex(idx);
@@ -30,6 +31,7 @@ const ProductInput = ({ title, id, idx, openPicker }) => {
 					<button className="bg-button text-white py-2 px-4 rounded-md">
 						Add Discount
 					</button>
+					{ProductsLength > 2 ? <RemoveIcon /> : null}
 				</div>
 			)}
 		</Draggable>

@@ -28,6 +28,7 @@ const ProductProvider = ({ children }) => {
 				PickedProducts.length === 0 ||
 				PickedProducts.length + ProductsLength > 4,
 			setPickedProducts,
+			ProductsLength,
 			EditIndex,
 			setEditIndex,
 			addProducts,

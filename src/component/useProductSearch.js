@@ -27,7 +27,7 @@ const useProductSearch = (query, pageNum) => {
 				);
 				setHasMore(res.data && res.data.length > 0);
 				setLoading(false);
-				console.log(res.data ? res.data[0] : null);
+				// console.log(res.data ? res.data[0] : null);
 			})
 			.catch((err) => {
 				if (axios.isCancel(err)) return;
