@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useRef, useCallback } from "react";
 import useProductSearch from "./useProductSearch";
 import ProductItem from "./ProductItem";
+
 const ProductPicker = () => {
 	const [query, setQuery] = useState("");
 	const [pageNum, setPageNum] = useState(1);
@@ -67,30 +68,21 @@ const ProductPicker = () => {
 				</div>
 			</div>
 			<div ref={observeContainer} className="h-[60vh] overflow-y-auto">
-				{queryProducts.map(
-					({ title, id, image, variants, status, handle }, idx) => {
-						return queryProducts.length - 1 === idx ? (
-							<ProductItem
-								lastProductRef={lastProductRef}
-								key={`${id.toString()} ${idx}`}
-								title={title}
-								image={image.src}
-								variants={variants}
-								status={status}
-								handle={handle}
-							/>
-						) : (
-							<ProductItem
-								key={`${id.toString()} ${idx}`}
-								title={title}
-								image={image.src}
-								variants={variants}
-								status={status}
-								handle={handle}
-							/>
-						);
-					}
-				)}
+				{queryProducts.map((product, idx) => {
+					return queryProducts.length - 1 === idx ? (
+						<ProductItem
+							lastProductRef={lastProductRef}
+							key={`${product.id.toString()} ${idx}`}
+							product={product}
+						/>
+					) : (
+						<ProductItem
+							lastProductRef={null}
+							key={`${product.id.toString()} ${idx}`}
+							product={product}
+						/>
+					);
+				})}
 				{loading ? (
 					<div className="mt-2 text px-6 border-t">Loading...</div>
 				) : null}
