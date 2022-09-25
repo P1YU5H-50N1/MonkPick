@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import DragHandleIcon from "./DragHandleIcon";
+import { ProductContext } from "./ProductProvider";
 import EditIcon from "./EditIcon";
 
 const ProductInput = ({ title, id, idx, openPicker }) => {
+	const { setEditIndex } = useContext(ProductContext);
+	const handleEditItem = () => {
+		openPicker();
+		setEditIndex(idx);
+	};
+
 	return (
-		<Draggable  index={idx} draggableId={id.toString()}>
+		<Draggable index={idx} draggableId={id.toString()}>
 			{(provided, snapshot) => (
 				<div
 					className="flex gap-5 mt-4 items-center"
@@ -18,7 +25,7 @@ const ProductInput = ({ title, id, idx, openPicker }) => {
 						<div className="m-2">
 							{title ? title : "Select Product"}
 						</div>
-						<EditIcon openPicker={openPicker}/>
+						<EditIcon handleEditItem={handleEditItem} />
 					</div>
 					<button className="bg-button text-white py-2 px-4 rounded-md">
 						Add Discount
