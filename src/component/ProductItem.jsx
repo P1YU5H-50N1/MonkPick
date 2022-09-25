@@ -5,29 +5,37 @@ import { IconContext } from "react-icons";
 
 const ProductItem = ({ product, lastProductRef }) => {
 	const { id, title, image, variants, status, handle } = product;
-	const { setPickedProducts, Products } = useContext(ProductContext);
+	const { setPickedProducts, Products, EditIndex } =
+		useContext(ProductContext);
 
 	const [selected, setSelected] = useState(false);
 	const [ThisPicked, setThisPicked] = useState(false);
+
+	const [CurrentProduct] = Products.filter((curr) => curr.id === id);
+	// const CurrentProduct = Products[EditIndex].id;
+
+	const disableCheckbox =
+		CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
+	// const disableCheckbox =
+	// CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
+
 	const [CheckedItems, setCheckedItems] = useState(() => {
-		const [CurrentProduct] = Products.filter((curr) => curr.id === id);
 		const checkedIds = CurrentProduct
 			? CurrentProduct.variants.map(({ id }) => id)
 			: [];
 		const prevChecked = variants.map(({ id }) => checkedIds.includes(id));
-		return prevChecked
+		return prevChecked;
 	});
 
-	
 	const ref = lastProductRef
 		? {
 				ref: lastProductRef,
 		  }
 		: {};
 
-	// console.log(title, "PRODUCT in selected");
-
 	useEffect(() => {
+		if (disableCheckbox) return;
+		
 		const includesFalse = CheckedItems.includes(false);
 		const includesTrue = CheckedItems.includes(true);
 		const allChecked = includesTrue && !includesFalse;
@@ -36,16 +44,21 @@ const ProductItem = ({ product, lastProductRef }) => {
 
 		if (allChecked) {
 			if (!ThisPicked) {
+				console.log("All checked and this not picked");
 				setPickedProducts((prevPicks) => [...prevPicks, product]);
 				setThisPicked(true);
 			}
 		} else if (noneChecked) {
+			console.log("None checked");
+
 			setPickedProducts((prevPicks) =>
 				prevPicks.filter((pick) => pick.title !== title)
 			);
 			setThisPicked(false);
 		} else if (someChecked) {
 			if (ThisPicked) {
+				console.log("some checked and this picked");
+
 				setPickedProducts((prevPicks) =>
 					prevPicks.map((picked) => {
 						if (picked.id === id) {
@@ -61,6 +74,8 @@ const ProductItem = ({ product, lastProductRef }) => {
 					})
 				);
 			} else {
+				console.log("some checked and this not picked");
+
 				setPickedProducts((prevPicks) => [
 					...prevPicks,
 					{
@@ -115,6 +130,7 @@ const ProductItem = ({ product, lastProductRef }) => {
 			>
 				<div className="flex gap-3 items-center">
 					<input
+						disabled={disableCheckbox}
 						checked={selected}
 						onChange={handleCheck}
 						className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-button checked:border-button focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
@@ -167,6 +183,7 @@ const ProductItem = ({ product, lastProductRef }) => {
 								>
 									<div className="flex gap-5">
 										<input
+											disabled={disableCheckbox}
 											checked={CheckedItems[index]}
 											onChange={(e) => {
 												handleSubCheck(e, index);

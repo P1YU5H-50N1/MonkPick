@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import ProductInput from "./ProductInput";
 import { ProductContext } from "./ProductProvider";
@@ -61,9 +61,9 @@ const ProductList = () => {
 								>
 									{Products.map(({ title, id }, idx) => (
 										<ProductInput
-											key={id.toString()}
+											key={id==="null"?idx:id.toString()}
 											title={title}
-											id={id}
+											id={id==="null"?`${idx}monk`:id}
 											openPicker={() =>
 												setOpenPicker(true)
 											}
