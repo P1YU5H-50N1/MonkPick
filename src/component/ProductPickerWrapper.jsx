@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ProductContext } from "./ProductProvider";
 import { Dialog, Transition } from "@headlessui/react";
 import ProductPicker from "./ProductPicker";
 import { Fragment, useState } from "react";
 
 const ProductPickerWrapper = ({ isOpen, setIsOpen }) => {
+	const { addProducts,disableAddProducts } = useContext(ProductContext);
 	const closeModal = () => {
 		setIsOpen(false);
 	};
@@ -54,9 +56,13 @@ const ProductPickerWrapper = ({ isOpen, setIsOpen }) => {
 											Cancel
 										</button>
 										<button
+											disabled={disableAddProducts}
 											type="button"
-											className="inline-flex bg-button justify-center rounded-md border border-transparent text-white px-4 py-2 text-sm font-medium"
-											onClick={closeModal}
+											className="inline-flex bg-button justify-center rounded-md border border-transparent text-white px-4 py-2 text-sm font-medium disabled:bg-gray-200 disabled:text-gray-500"
+											onClick={() => {
+												addProducts();
+												closeModal();
+											}}
 										>
 											Add
 										</button>
