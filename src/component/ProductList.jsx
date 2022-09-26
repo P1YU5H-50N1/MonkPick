@@ -8,21 +8,7 @@ const ProductList = () => {
 	// const [Products, setProducts] = useState()
 	const [openPicker, setOpenPicker] = useState(false);
 	const { Products, setProducts } = useContext(ProductContext);
-	// const setProducts = ()=>{console.log("set")}
-	// const onBeforeCapture = () => {
-	// 	/*...*/
-	// };
 
-	// const onBeforeDragStart = () => {
-	// 	/*...*/
-	// };
-
-	// const onDragStart = () => {
-	// 	/*...*/
-	// };
-	// const onDragUpdate = () => {
-	// 	/*...*/
-	// };
 	const onDragEnd = (result) => {
 		const items = Array.from(Products);
 		items.splice(
@@ -47,10 +33,6 @@ const ProductList = () => {
 						<div>Discount</div>
 					</div>
 					<DragDropContext
-						// onBeforeCapture={onBeforeCapture}
-						// onBeforeDragStart={onBeforeDragStart}
-						// onDragStart={onDragStart}
-						// onDragUpdate={onDragUpdate}
 						onDragEnd={onDragEnd}
 					>
 						<Droppable droppableId="products" type="products">
