@@ -58,12 +58,14 @@ const ProductList = () => {
 								<div
 									ref={provided.innerRef}
 									{...provided.droppableProps}
+									className="flex flex-col"
 								>
-									{Products.map(({ title, id }, idx) => (
+									{Products.map((product, idx) => (
 										<ProductInput
-											key={id==="null"?idx:id.toString()}
-											title={title}
-											id={id==="null"?`${idx}monk`:id}
+											product = {product}
+											key={product.id==="null"?idx:product.id.toString()}
+											// title={title}
+											// id={id==="null"?`${idx}monk`:id}
 											openPicker={() =>
 												setOpenPicker(true)
 											}
@@ -85,6 +87,7 @@ const ProductList = () => {
 								{
 									title: "",
 									id: "null",
+									variants:[]
 								},
 							]);
 						}}
