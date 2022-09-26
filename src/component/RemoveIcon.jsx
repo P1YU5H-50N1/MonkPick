@@ -2,7 +2,7 @@ import React from "react";
 import { MdClose } from "react-icons/md";
 import { IconContext } from "react-icons";
 
-const RemoveIcon = () => {
+const RemoveIcon = (props) => {
 	return (
 		<IconContext.Provider
 			value={{
@@ -10,7 +10,7 @@ const RemoveIcon = () => {
 				size: "2.5em",
 			}}
 		>
-			<MdClose />
+			<MdClose {...props} />
 		</IconContext.Provider>
 	);
 };
