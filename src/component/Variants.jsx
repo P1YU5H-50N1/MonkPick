@@ -4,19 +4,12 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { ProductContext } from "./ProductProvider";
 import Variant from "./Variant";
 
-const Variants = ({ variants, productid }) => {
+const Variants = ({ variants, productid, discount }) => {
 	const [Show, setShow] = useState(false);
     const {reorderVariant,} = useContext(ProductContext);
 
 	const onDragEnd = (result) => {
         reorderVariant(productid,result.source.index,result.destination.index)
-		// const items = Array.from(Products);
-		// items.splice(
-		// 	result.destination.index,
-		// 	0,
-		// 	...items.splice(result.source.index, 1)
-		// );
-		// setProducts(items);
 	};
 
 	if (variants && variants.length <= 1) {
@@ -59,6 +52,7 @@ const Variants = ({ variants, productid }) => {
 								>
 									{variants.map((variant,index) => (
 										<Variant
+                                            discount={discount}
 											key={variant.admin_graphql_api_id}
 											variant={variant}
                                             index={index}

@@ -10,6 +10,8 @@ const ProductInput = ({ product, idx, openPicker }) => {
 	const { title, variants } = product;
 	const id = product.id === "null" ? idx : product.id;
 
+	const [Discount, setDiscount] = useState(null);
+
 	const { setEditIndex, ProductsLength, removeItem } =
 		useContext(ProductContext);
 
@@ -35,9 +37,34 @@ const ProductInput = ({ product, idx, openPicker }) => {
 							</div>
 							<EditIcon handleEditItem={handleEditItem} />
 						</div>
-						<button className="bg-button text-white py-2 px-4 rounded-md">
-							Add Discount
-						</button>
+						{Discount === null ? (
+							<button
+								onClick={() => setDiscount(0)}
+								className="bg-button text-white py-2 px-4 rounded-md"
+							>
+								Add Discount
+							</button>
+						) : (
+							<>
+								<input
+									type="text"
+									min="0"
+									max="100"
+									class=" form-control block w-20 px-3 py-1.5 text-base font-normal   bg-white bg-clip-padding border border-solid border-gray-300 rounded-sm transition ease-in-out m-0 focus:bg-white focus:outline-none "
+									value={Discount}
+									type="number"
+									onChange={(e) =>
+										setDiscount(e.target.value)
+									}
+								/>
+								<select className="form-select block w-28 px-3 py-[0.5rem] text-base font-normal   bg-white bg-clip-padding border border-solid border-gray-300 rounded-sm transition ease-in-out m-0  focus:bg-white focus:outline-none">
+									<option selected value="1">
+										% Off
+									</option>
+									<option value="2">Flat Off</option>
+								</select>
+							</>
+						)}
 						{ProductsLength > 1 ? (
 							<RemoveIcon
 								onClick={() => {
@@ -46,7 +73,7 @@ const ProductInput = ({ product, idx, openPicker }) => {
 							/>
 						) : null}
 					</div>
-					<Variants variants={variants} productid={id} />
+					<Variants variants={variants} productid={id} discount={Discount} />
 				</>
 			)}
 		</Draggable>
