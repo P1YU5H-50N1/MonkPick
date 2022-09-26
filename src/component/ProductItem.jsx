@@ -4,213 +4,197 @@ import { ProductContext } from "./ProductProvider";
 import { IconContext } from "react-icons";
 
 const ProductItem = ({ product, lastProductRef }) => {
-	const { id, title, image, variants, status, handle } = product;
-	const { setPickedProducts, Products, EditIndex } =
-		useContext(ProductContext);
+  const { id, title, image, variants, status, handle } = product;
+  const { setPickedProducts, Products, EditIndex } = useContext(ProductContext);
 
-	const [selected, setSelected] = useState(false);
-	const [ThisPicked, setThisPicked] = useState(false);
+  const [selected, setSelected] = useState(false);
+  const [ThisPicked, setThisPicked] = useState(false);
 
-	const [CurrentProduct] = Products.filter((curr) => curr.id === id);
-	// const CurrentProduct = Products[EditIndex].id;
+  const [CurrentProduct] = Products.filter((curr) => curr.id === id);
+  // const CurrentProduct = Products[EditIndex].id;
 
-	const disableCheckbox =
-		CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
-	// const disableCheckbox =
-	// CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
+  const disableCheckbox =
+    CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
+  // const disableCheckbox =
+  // CurrentProduct && Products[EditIndex].id !== CurrentProduct.id;
 
-	const [CheckedItems, setCheckedItems] = useState(() => {
-		const checkedIds = CurrentProduct
-			? CurrentProduct.variants.map(({ id }) => id)
-			: [];
-		const prevChecked = variants.map(({ id }) => checkedIds.includes(id));
-		return prevChecked;
-	});
+  const [CheckedItems, setCheckedItems] = useState(() => {
+    const checkedIds = CurrentProduct
+      ? CurrentProduct.variants.map(({ id }) => id)
+      : [];
+    const prevChecked = variants.map(({ id }) => checkedIds.includes(id));
+    return prevChecked;
+  });
 
-	const ref = lastProductRef
-		? {
-				ref: lastProductRef,
-		  }
-		: {};
+  const ref = lastProductRef
+    ? {
+        ref: lastProductRef,
+      }
+    : {};
 
-	useEffect(() => {
-		if (disableCheckbox) return;
-		
-		const includesFalse = CheckedItems.includes(false);
-		const includesTrue = CheckedItems.includes(true);
-		const allChecked = includesTrue && !includesFalse;
-		const someChecked = includesTrue && includesFalse;
-		const noneChecked = !includesTrue && includesFalse;
+  useEffect(() => {
+    if (disableCheckbox) return;
 
-		if (allChecked) {
-			if (!ThisPicked) {
-				console.log("All checked and this not picked");
-				setPickedProducts((prevPicks) => [...prevPicks, product]);
-				setThisPicked(true);
-			}
-		} else if (noneChecked) {
-			console.log("None checked");
+    const includesFalse = CheckedItems.includes(false);
+    const includesTrue = CheckedItems.includes(true);
+    const allChecked = includesTrue && !includesFalse;
+    const someChecked = includesTrue && includesFalse;
+    const noneChecked = !includesTrue && includesFalse;
 
-			setPickedProducts((prevPicks) =>
-				prevPicks.filter((pick) => pick.title !== title)
-			);
-			setThisPicked(false);
-		} else if (someChecked) {
-			if (ThisPicked) {
-				console.log("some checked and this picked");
+    if (allChecked) {
+      if (!ThisPicked) {
+        console.log("All checked and this not picked");
+        setPickedProducts((prevPicks) => [...prevPicks, product]);
+        setThisPicked(true);
+      }
+    } else if (noneChecked) {
+      console.log("None checked");
 
-				setPickedProducts((prevPicks) =>
-					prevPicks.map((picked) => {
-						if (picked.id === id) {
-							return {
-								...picked,
-								variants: variants.filter(
-									(variant, idx) => CheckedItems[idx]
-								),
-							};
-						} else {
-							return picked;
-						}
-					})
-				);
-			} else {
-				console.log("some checked and this not picked");
+      setPickedProducts((prevPicks) =>
+        prevPicks.filter((pick) => pick.title !== title)
+      );
+      setThisPicked(false);
+    } else if (someChecked) {
+      if (ThisPicked) {
+        console.log("some checked and this picked");
 
-				setPickedProducts((prevPicks) => [
-					...prevPicks,
-					{
-						...product,
-						variants: variants.filter(
-							(variant, idx) => CheckedItems[idx]
-						),
-					},
-				]);
-				setThisPicked(true);
-			}
-		}
-	}, [CheckedItems]);
+        setPickedProducts((prevPicks) =>
+          prevPicks.map((picked) => {
+            if (picked.id === id) {
+              return {
+                ...picked,
+                variants: variants.filter((variant, idx) => CheckedItems[idx]),
+              };
+            } else {
+              return picked;
+            }
+          })
+        );
+      } else {
+        console.log("some checked and this not picked");
 
-	const checkboxRef = useCallback(
-		(checkbox) => {
-			if (checkbox) {
-				const includesFalse = CheckedItems.includes(false);
-				const includesTrue = CheckedItems.includes(true);
-				const someChecked = includesTrue && includesFalse;
-				const allChecked = includesTrue && !includesFalse;
+        setPickedProducts((prevPicks) => [
+          ...prevPicks,
+          {
+            ...product,
+            variants: variants.filter((variant, idx) => CheckedItems[idx]),
+          },
+        ]);
+        setThisPicked(true);
+      }
+    }
+  }, [CheckedItems]);
 
-				if (someChecked) {
-					checkbox.indeterminate = true;
-				} else {
-					checkbox.indeterminate = false;
-					setSelected(allChecked);
-				}
-			}
-		},
-		[CheckedItems, selected]
-	);
+  const checkboxRef = useCallback(
+    (checkbox) => {
+      if (checkbox) {
+        const includesFalse = CheckedItems.includes(false);
+        const includesTrue = CheckedItems.includes(true);
+        const someChecked = includesTrue && includesFalse;
+        const allChecked = includesTrue && !includesFalse;
 
-	const handleSubCheck = (e, index) => {
-		setCheckedItems((checks) => [
-			...checks.splice(0, index),
-			e.target.checked,
-			...checks.splice(1),
-		]);
-	};
+        if (someChecked) {
+          checkbox.indeterminate = true;
+        } else {
+          checkbox.indeterminate = false;
+          setSelected(allChecked);
+        }
+      }
+    },
+    [CheckedItems, selected]
+  );
 
-	const handleCheck = (e) => {
-		setSelected(e.target.checked);
-		setCheckedItems((prev) => prev.map((check) => e.target.checked));
-	};
+  const handleSubCheck = (e, index) => {
+    setCheckedItems((checks) => [
+      ...checks.splice(0, index),
+      e.target.checked,
+      ...checks.splice(1),
+    ]);
+  };
 
-	return (
-		<div>
-			<div
-				{...ref}
-				className="mt-2  text flex justify-between items-center py-3 pl-6 pr-10 border-t"
-			>
-				<div className="flex gap-3 items-center">
-					<input
-						disabled={disableCheckbox}
-						checked={selected}
-						onChange={handleCheck}
-						className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-button checked:border-button focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-						ref={checkboxRef}
-						type="checkbox"
-					/>
+  const handleCheck = (e) => {
+    setSelected(e.target.checked);
+    setCheckedItems((prev) => prev.map((check) => e.target.checked));
+  };
 
-					{image ? (
-						<img
-							height="52px"
-							width="52px"
-							className="rounded-md border"
-							src={image.src}
-						></img>
-					) : (
-						<div className="h-[52px] w-[52px] rounded-md flex items-center justify-center border">
-							<IconContext.Provider
-								value={{
-									className: "text-slate-600",
-									size: "28px",
-								}}
-							>
-								<MdOutlineBrokenImage />
-							</IconContext.Provider>
-						</div>
-					)}
-					<div>{title}</div>
-				</div>
-				{variants.length === 1 ? (
-					<div className="flex gap-5">
-						{variants[0].inventory_quantity ? (
-							<div>
-								{variants[0].inventory_quantity} available
-							</div>
-						) : null}
-						<div>₹{Number(variants[0].price).toLocaleString()}</div>
-					</div>
-				) : null}
-			</div>
-			<div>
-				{variants.length > 1
-					? variants.map(
-							(
-								{ title, inventory_quantity, price, id },
-								index
-							) => (
-								<div
-									key={id.toString()}
-									className=" justify-between text flex items-center py-4 pl-20 pr-10 border-t"
-								>
-									<div className="flex gap-5">
-										<input
-											disabled={disableCheckbox}
-											checked={CheckedItems[index]}
-											onChange={(e) => {
-												handleSubCheck(e, index);
-											}}
-											className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-button checked:border-button focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-											type="checkbox"
-										/>
+  return (
+    <div>
+      <div
+        {...ref}
+        className="mt-2  text flex justify-between items-center py-3 pl-6 pr-10 border-t"
+      >
+        <div className="flex gap-3 items-center">
+          <input
+            disabled={disableCheckbox}
+            checked={selected}
+            onChange={handleCheck}
+            className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-button checked:border-button focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+            ref={checkboxRef}
+            type="checkbox"
+          />
 
-										<div>{title}</div>
-									</div>
-									<div className="flex gap-5">
-										{inventory_quantity ? (
-											<div>
-												{inventory_quantity} available
-											</div>
-										) : null}
-										<div>
-											₹{Number(price).toLocaleString()}
-										</div>
-									</div>
-								</div>
-							)
-					  )
-					: null}
-			</div>
-		</div>
-	);
+          {image ? (
+            <img
+              height="52px"
+              width="52px"
+              className="rounded-md border"
+              src={image.src}
+            ></img>
+          ) : (
+            <div className="h-[52px] w-[52px] rounded-md flex items-center justify-center border">
+              <IconContext.Provider
+                value={{
+                  className: "text-slate-600",
+                  size: "28px",
+                }}
+              >
+                <MdOutlineBrokenImage />
+              </IconContext.Provider>
+            </div>
+          )}
+          <div>{title}</div>
+        </div>
+        {variants.length === 1 ? (
+          <div className="flex gap-5">
+            {variants[0].inventory_quantity ? (
+              <div>{variants[0].inventory_quantity} available</div>
+            ) : null}
+            <div>₹{Number(variants[0].price).toLocaleString()}</div>
+          </div>
+        ) : null}
+      </div>
+      <div>
+        {variants.length > 1
+          ? variants.map(({ title, inventory_quantity, price, id }, index) => (
+              <div
+                key={id.toString()}
+                className=" justify-between text flex items-center py-4 pl-20 pr-10 border-t"
+              >
+                <div className="flex gap-5">
+                  <input
+                    disabled={disableCheckbox}
+                    checked={CheckedItems[index]}
+                    onChange={(e) => {
+                      handleSubCheck(e, index);
+                    }}
+                    className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-button checked:border-button focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                    type="checkbox"
+                  />
+
+                  <div>{title}</div>
+                </div>
+                <div className="flex gap-5">
+                  {inventory_quantity ? (
+                    <div>{inventory_quantity} available</div>
+                  ) : null}
+                  <div>₹{Number(price).toLocaleString()}</div>
+                </div>
+              </div>
+            ))
+          : null}
+      </div>
+    </div>
+  );
 };
 
 export default ProductItem;
