@@ -10,7 +10,6 @@ const ProductProvider = ({ children }) => {
 	const [PickedProducts, setPickedProducts] = useState([]);
 	const [EditIndex, setEditIndex] = useState(null);
 
-
 	const addProducts = (e) => {
 		setProducts((products) => [
 			...products.slice(0, EditIndex),
@@ -19,7 +18,48 @@ const ProductProvider = ({ children }) => {
 		]);
 		setPickedProducts([]);
 	};
-	
+
+	const removeItem = (idx) => {
+		setProducts((prevProducts) =>
+			prevProducts.filter((product, index) => idx !== index)
+		);
+	};
+	const reorderVariant = (product_id, srcIndex, destIndex) => {
+		setProducts((prevProducts) =>
+			prevProducts.map((product) => {
+				if (product.id === product_id) {
+					const variants = Array.from(product.variants);
+					variants.splice(
+						destIndex,
+						0,
+						...variants.splice(srcIndex, 1)
+					);
+					console.log(variants);
+					product.variants = variants;
+					return product;
+				} else {
+					return product;
+				}
+			})
+		);
+	};
+
+	const removeVariant = (product_id, variant_id) => {
+		setProducts((prevProducts) =>
+			prevProducts.map((product) => {
+				if (product.id === product_id) {
+					const variants = Array.from(product.variants);
+					product.variants = variants.filter(
+						({ id }) => id !== variant_id
+					);
+					return product;
+				} else {
+					return product;
+				}
+			})
+		);
+	};
+
 	const store = useMemo(
 		() => ({
 			Products,
@@ -29,6 +69,9 @@ const ProductProvider = ({ children }) => {
 				PickedProducts.length + ProductsLength > 4,
 			setPickedProducts,
 			ProductsLength,
+			reorderVariant,
+			removeVariant,
+			removeItem,
 			EditIndex,
 			setEditIndex,
 			addProducts,
@@ -37,13 +80,13 @@ const ProductProvider = ({ children }) => {
 			Products,
 			setProducts,
 			PickedProducts,
+			removeItem,
 			setPickedProducts,
 			EditIndex,
 			setEditIndex,
 		]
 	);
 
-	
 	return (
 		<ProductContext.Provider value={store}>
 			{children}
