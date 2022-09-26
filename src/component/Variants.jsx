@@ -30,7 +30,7 @@ const Variants = ({ variants, productid, discount }) => {
         ) : (
           <>
             <p>Show Variants</p>
-            <HiChevronDown />
+            <HiChevronUp />
           </>
         )}
       </button>
